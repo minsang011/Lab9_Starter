@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 9</title>
+  
 
   <style>
     button {
@@ -49,6 +50,7 @@
   </style>
 </head>
 
+
 <body>
   <main>
     <form>
@@ -87,6 +89,15 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "895b7835cd0648a7a7f9f80a7781541f"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
@@ -95,13 +106,55 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      
+      try {
+        if (secondNum == 0 && operator == '/') {
+          throw new Error('Division by zero');
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        output.innerHTML = `Error: ${err.message}`;
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => console.log('Console Log Button Clicked'));
+    errorBtns[1].addEventListener('click', () => console.error('Console Error Button Clicked'));
+    errorBtns[2].addEventListener('click', () => console.count('Count Button'));
+    errorBtns[3].addEventListener('click', () => console.warn('Console Warn Button'));
+    errorBtns[4].addEventListener('click', () => console.assert(false, { number: 2, errorMsg: 'Not equal to 5' }));
+    errorBtns[5].addEventListener('click', () => console.clear());
+    errorBtns[6].addEventListener('click', () => console.dir(document.body));
+    errorBtns[7].addEventListener('click', () => console.dirxml(document));
+    errorBtns[8].addEventListener('click', () => console.group('Console Group'));
+    errorBtns[9].addEventListener('click', () => console.groupEnd());
+    errorBtns[10].addEventListener('click', () => console.table([{ lName: 'Kim', fName: 'Minsang' }, { lName: 'Choi', fName: 'Jin' }]));
+    errorBtns[11].addEventListener('click', () => console.time('Timer'));
+    errorBtns[12].addEventListener('click', () => console.timeEnd('Timer'));
+    errorBtns[13].addEventListener('click', () => console.trace('Console Trace'));
+
+    class CustomError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CustomError';
+      }
+    }
+    throw new CustomError('This is a custom error');
+
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error(`Global Error Caught: ${message} at ${source}:${lineno}:${colno}`, error);
+    };
+
+    errorBtns[14].addEventListener('click', () => {
+
+      try {
+        noneFunction();
+      } catch (error) {
+        TrackJS.track(error);
+      }
+    });
+
   </script>
 </body>
 
